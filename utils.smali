@@ -4,33 +4,19 @@
 
 
 # static fields
-.field public static final DEBUG_ONEPLUS:Z
+.field public static final KEY_AOD_DISPLAY_MODE:Ljava/lang/String; = "aod_display_mode"
 
-.field public static final DEVICE_14001:Ljava/lang/String; = "14001"
+.field public static final KEY_MOTION_AWAKE:Ljava/lang/String; = "prox_wake_enabled"
 
-.field public static final DEVICE_14049:Ljava/lang/String; = "14049"
+.field public static final KEY_NOTIFICATION_WAKE:Ljava/lang/String; = "notification_wake_enabled"
 
-.field public static final DEVICE_15055:Ljava/lang/String; = "15055"
+.field private static final TAG:Ljava/lang/String; = "OPAodUtils"
 
-.field public static final DEVICE_15801:Ljava/lang/String; = "15801"
+.field public static final THEME_ANDROID:I = 0x2
 
-.field public static final DEVICE_15811:Ljava/lang/String; = "15811"
+.field public static final THEME_BLACK:I = 0x1
 
-.field public static final DEVICE_16859:Ljava/lang/String; = "16859"
-
-.field public static final DEVICE_17801:Ljava/lang/String; = "17801"
-
-.field public static final DEVICE_17819:Ljava/lang/String; = "17819"
-
-.field public static KEY_AOD_DISPLAY_MODE:Ljava/lang/String;
-
-.field public static KEY_MOTION_AWAKE:Ljava/lang/String;
-
-.field public static KEY_NOTIFICATION_WAKE:Ljava/lang/String;
-
-.field private static TAG:Ljava/lang/String;
-
-.field private static mCurrentUser:I
+.field public static final THEME_WHITE:I
 
 .field private static mIsAlwaysOnModeEnabled:Z
 
@@ -38,70 +24,41 @@
 
 .field private static mMotionAwakeOn:Z
 
-.field private static sDeviceTag:Ljava/lang/String;
+.field private static mSingleTapAwakeOn:Z
 
 
 # direct methods
-.method static constructor <clinit>()V
-    .locals 1
-
-    .prologue
-    .line 16
-    const-string/jumbo v0, "OPAodUtils"
-
-    sput-object v0, Lcom/oneplus/aod/Utils;->TAG:Ljava/lang/String;
-
-    .line 18
-    sget-boolean v0, Landroid/os/Build;->DEBUG_ONEPLUS:Z
-
-    sput-boolean v0, Lcom/oneplus/aod/Utils;->DEBUG_ONEPLUS:Z
-
-    .line 21
-    const-string/jumbo v0, "prox_wake_enabled"
-
-    sput-object v0, Lcom/oneplus/aod/Utils;->KEY_MOTION_AWAKE:Ljava/lang/String;
-
-    .line 23
-    const-string/jumbo v0, "aod_display_mode"
-
-    sput-object v0, Lcom/oneplus/aod/Utils;->KEY_AOD_DISPLAY_MODE:Ljava/lang/String;
-
-    .line 25
-    const-string/jumbo v0, "notification_wake_enabled"
-
-    sput-object v0, Lcom/oneplus/aod/Utils;->KEY_NOTIFICATION_WAKE:Ljava/lang/String;
-
-    .line 36
-    const-string/jumbo v0, ""
-
-    sput-object v0, Lcom/oneplus/aod/Utils;->sDeviceTag:Ljava/lang/String;
-
-    .line 14
-    return-void
-.end method
-
 .method public constructor <init>()V
     .locals 0
 
-    .prologue
-    .line 14
+    .line 16
     invoke-direct {p0}, Ljava/lang/Object;-><init>()V
 
     return-void
 .end method
 
-.method public static getDeviceTag()Ljava/lang/String;
-    .locals 1
+.method public static getThemeColor(Landroid/content/Context;)I
+    .locals 4
+    .param p0, "context"    # Landroid/content/Context;
 
-    .prologue
-    .line 82
-    const-string/jumbo v0, "ro.boot.project_name"
-
-    invoke-static {v0}, Landroid/os/SystemProperties;->get(Ljava/lang/String;)Ljava/lang/String;
+    .line 145
+    invoke-virtual {p0}, Landroid/content/Context;->getContentResolver()Landroid/content/ContentResolver;
 
     move-result-object v0
 
-    return-object v0
+    const-string v1, "oem_black_mode"
+
+    const/4 v2, 0x2
+
+    const/4 v3, 0x0
+
+    invoke-static {v0, v1, v2, v3}, Landroid/provider/Settings$System;->getIntForUser(Landroid/content/ContentResolver;Ljava/lang/String;II)I
+
+    move-result v0
+
+    .line 147
+    .local v0, "mode":I
+    return v0
 .end method
 
 .method public static init(Landroid/content/Context;I)V
@@ -109,79 +66,156 @@
     .param p0, "context"    # Landroid/content/Context;
     .param p1, "userId"    # I
 
-    .prologue
-    .line 45
+    .line 39
     invoke-static {p0, p1}, Lcom/oneplus/aod/Utils;->updateDozeSettings(Landroid/content/Context;I)V
 
-    .line 46
+    .line 40
     return-void
 .end method
 
 .method public static isAlwaysOnEnabled()Z
-    .locals 3
+    .locals 2
 
-    .prologue
-    .line 97
-    sget-object v0, Lcom/oneplus/aod/Utils;->TAG:Ljava/lang/String;
+    .line 64
+    new-instance v0, Ljava/lang/StringBuilder;
 
+    invoke-direct {v0}, Ljava/lang/StringBuilder;-><init>()V
+
+    const-string v1, "isAlwaysOnEnabled: "
+
+    invoke-virtual {v0, v1}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    sget-boolean v1, Lcom/oneplus/aod/Utils;->mIsAlwaysOnModeEnabled:Z
+
+    invoke-virtual {v0, v1}, Ljava/lang/StringBuilder;->append(Z)Ljava/lang/StringBuilder;
+
+    invoke-virtual {v0}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+
+    move-result-object v0
+
+    const-string v1, "OPAodUtils"
+
+    invoke-static {v1, v0}, Landroid/util/Log;->d(Ljava/lang/String;Ljava/lang/String;)I
+
+    .line 67
+    const-string v0, "sys.aod.localtest"
+
+    invoke-static {v0}, Landroid/os/SystemProperties;->get(Ljava/lang/String;)Ljava/lang/String;
+
+    move-result-object v0
+
+    .line 69
+    .local v0, "test":Ljava/lang/String;
+    const-string v1, "1"
+
+    invoke-virtual {v1, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+
+    move-result v1
+
+    if-eqz v1, :cond_0
+
+    .line 70
+    const/4 v1, 0x1
+
+    return v1
+
+    .line 73
+    :cond_0
+    const/4 v1, 0x0
+
+    return v1
+.end method
+
+.method public static isAlwaysOnEnabledWithTimer()Z
+    .locals 4
+
+    .line 77
+    const-string v0, "sys.aod.localtest.timer"
+
+    invoke-static {v0}, Landroid/os/SystemProperties;->get(Ljava/lang/String;)Ljava/lang/String;
+
+    move-result-object v0
+
+    .line 78
+    .local v0, "test":Ljava/lang/String;
     new-instance v1, Ljava/lang/StringBuilder;
 
     invoke-direct {v1}, Ljava/lang/StringBuilder;-><init>()V
 
-    const-string/jumbo v2, "isAlwaysOnEnabled: "
+    const-string v2, "isAlwaysOnEnabledWithTimer: "
 
     invoke-virtual {v1, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
 
-    move-result-object v1
+    const-string v2, "1"
 
-    sget-boolean v2, Lcom/oneplus/aod/Utils;->mIsAlwaysOnModeEnabled:Z
+    invoke-virtual {v2, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
 
-    invoke-virtual {v1, v2}, Ljava/lang/StringBuilder;->append(Z)Ljava/lang/StringBuilder;
+    move-result v3
 
-    move-result-object v1
+    invoke-virtual {v1, v3}, Ljava/lang/StringBuilder;->append(Z)Ljava/lang/StringBuilder;
 
     invoke-virtual {v1}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
 
     move-result-object v1
 
-    invoke-static {v0, v1}, Landroid/util/Log;->d(Ljava/lang/String;Ljava/lang/String;)I
+    const-string v3, "OPAodUtils"
 
-    .line 98
-    sget-boolean v0, Lcom/oneplus/aod/Utils;->mIsAlwaysOnModeEnabled:Z
+    invoke-static {v3, v1}, Landroid/util/Log;->d(Ljava/lang/String;Ljava/lang/String;)I
+
+    .line 80
+    invoke-virtual {v2, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+
+    move-result v1
+
+    return v1
+.end method
+
+.method public static isCustomFingerprint()Z
+    .locals 3
+
+    .line 139
+    const/4 v0, 0x1
+
+    new-array v0, v0, [I
+
+    const/4 v1, 0x0
+
+    const/16 v2, 0x50
+
+    aput v2, v0, v1
+
+    invoke-static {v0}, Landroid/util/OpFeatures;->isSupport([I)Z
+
+    move-result v0
 
     return v0
 .end method
 
 .method public static isMotionAwakeOn()Z
-    .locals 3
+    .locals 2
 
-    .prologue
-    .line 86
-    sget-object v0, Lcom/oneplus/aod/Utils;->TAG:Ljava/lang/String;
+    .line 43
+    new-instance v0, Ljava/lang/StringBuilder;
 
-    new-instance v1, Ljava/lang/StringBuilder;
+    invoke-direct {v0}, Ljava/lang/StringBuilder;-><init>()V
 
-    invoke-direct {v1}, Ljava/lang/StringBuilder;-><init>()V
+    const-string v1, "mMotionAwakeOn: "
 
-    const-string/jumbo v2, "mMotionAwakeOn: "
+    invoke-virtual {v0, v1}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
 
-    invoke-virtual {v1, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    sget-boolean v1, Lcom/oneplus/aod/Utils;->mMotionAwakeOn:Z
 
-    move-result-object v1
+    invoke-virtual {v0, v1}, Ljava/lang/StringBuilder;->append(Z)Ljava/lang/StringBuilder;
 
-    sget-boolean v2, Lcom/oneplus/aod/Utils;->mMotionAwakeOn:Z
+    invoke-virtual {v0}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
 
-    invoke-virtual {v1, v2}, Ljava/lang/StringBuilder;->append(Z)Ljava/lang/StringBuilder;
+    move-result-object v0
 
-    move-result-object v1
+    const-string v1, "OPAodUtils"
 
-    invoke-virtual {v1}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+    invoke-static {v1, v0}, Landroid/util/Log;->d(Ljava/lang/String;Ljava/lang/String;)I
 
-    move-result-object v1
-
-    invoke-static {v0, v1}, Landroid/util/Log;->d(Ljava/lang/String;Ljava/lang/String;)I
-
-    .line 87
+    .line 44
     sget-boolean v0, Lcom/oneplus/aod/Utils;->mMotionAwakeOn:Z
 
     return v0
@@ -190,162 +224,267 @@
 .method public static isNotificationWakeUpEnabled()Z
     .locals 1
 
-    .prologue
-    .line 115
+    .line 97
     sget-boolean v0, Lcom/oneplus/aod/Utils;->mIsNotificationWakeUpEnabled:Z
 
     return v0
 .end method
 
+.method public static isSingleTapEnabled()Z
+    .locals 2
+
+    .line 132
+    new-instance v0, Ljava/lang/StringBuilder;
+
+    invoke-direct {v0}, Ljava/lang/StringBuilder;-><init>()V
+
+    const-string v1, "isSingleTapEnabled: "
+
+    invoke-virtual {v0, v1}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    sget-boolean v1, Lcom/oneplus/aod/Utils;->mSingleTapAwakeOn:Z
+
+    invoke-virtual {v0, v1}, Ljava/lang/StringBuilder;->append(Z)Ljava/lang/StringBuilder;
+
+    invoke-virtual {v0}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+
+    move-result-object v0
+
+    const-string v1, "OPAodUtils"
+
+    invoke-static {v1, v0}, Landroid/util/Log;->d(Ljava/lang/String;Ljava/lang/String;)I
+
+    .line 133
+    sget-boolean v0, Lcom/oneplus/aod/Utils;->mSingleTapAwakeOn:Z
+
+    return v0
+.end method
+
+.method public static isSingleTapEnabled(Landroid/content/Context;I)Z
+    .locals 5
+    .param p0, "context"    # Landroid/content/Context;
+    .param p1, "user"    # I
+
+    .line 118
+    invoke-virtual {p0}, Landroid/content/Context;->getContentResolver()Landroid/content/ContentResolver;
+
+    move-result-object v0
+
+    const/4 v1, 0x0
+
+    const-string v2, "oem_acc_blackscreen_gestrue_enable"
+
+    invoke-static {v0, v2, v1, p1}, Landroid/provider/Settings$System;->getIntForUser(Landroid/content/ContentResolver;Ljava/lang/String;II)I
+
+    move-result v0
+
+    .line 121
+    .local v0, "gestureValue":I
+    and-int/lit16 v2, v0, 0x800
+
+    shr-int/lit8 v2, v2, 0xb
+
+    .line 122
+    .local v2, "finalValue":I
+    new-instance v3, Ljava/lang/StringBuilder;
+
+    invoke-direct {v3}, Ljava/lang/StringBuilder;-><init>()V
+
+    const-string v4, "isSingleTapEnabled: "
+
+    invoke-virtual {v3, v4}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    invoke-virtual {v3, v2}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+
+    invoke-virtual {v3}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+
+    move-result-object v3
+
+    const-string v4, "OPAodUtils"
+
+    invoke-static {v4, v3}, Landroid/util/Log;->d(Ljava/lang/String;Ljava/lang/String;)I
+
+    .line 124
+    const/4 v3, 0x1
+
+    if-ne v2, v3, :cond_0
+
+    move v1, v3
+
+    :cond_0
+    sput-boolean v1, Lcom/oneplus/aod/Utils;->mSingleTapAwakeOn:Z
+
+    .line 126
+    sget-boolean v1, Lcom/oneplus/aod/Utils;->mSingleTapAwakeOn:Z
+
+    return v1
+.end method
+
 .method public static isSupportAlwaysOn()Z
     .locals 1
 
-    .prologue
-    .line 129
+    .line 114
     const/4 v0, 0x1
 
     return v0
 .end method
 
+.method public static isSupportTapCoExist()Z
+    .locals 3
+
+    .line 156
+    const/4 v0, 0x1
+
+    new-array v0, v0, [I
+
+    const/4 v1, 0x0
+
+    const/16 v2, 0x133
+
+    aput v2, v0, v1
+
+    invoke-static {v0}, Landroid/util/OpFeatures;->isSupport([I)Z
+
+    move-result v0
+
+    return v0
+.end method
+
+.method public static isSupportXVibrate()Z
+    .locals 1
+
+    .line 151
+    const-string v0, "OP_FEATURE_X_LINEAR_VIBRATION_MOTOR"
+
+    invoke-static {v0}, Lcom/oneplus/lib/util/ReflectUtil;->isFeatureSupported(Ljava/lang/String;)Z
+
+    move-result v0
+
+    return v0
+.end method
+
 .method public static updateAlwaysOnState(Landroid/content/Context;I)V
-    .locals 6
+    .locals 5
     .param p0, "context"    # Landroid/content/Context;
     .param p1, "userId"    # I
 
-    .prologue
+    .line 84
+    const-string v0, "OPAodUtils"
+
+    sget-boolean v1, Lcom/oneplus/aod/Utils;->mMotionAwakeOn:Z
+
     const/4 v2, 0x1
 
     const/4 v3, 0x0
 
-    .line 102
-    sget-boolean v4, Lcom/oneplus/aod/Utils;->mMotionAwakeOn:Z
-
-    if-eqz v4, :cond_0
+    if-eqz v1, :cond_0
 
     invoke-static {}, Lcom/oneplus/aod/Utils;->isSupportAlwaysOn()Z
 
-    move-result v4
+    move-result v1
 
-    if-eqz v4, :cond_0
+    if-eqz v1, :cond_0
 
     invoke-virtual {p0}, Landroid/content/Context;->getContentResolver()Landroid/content/ContentResolver;
 
-    move-result-object v4
+    move-result-object v1
 
-    sget-object v5, Lcom/oneplus/aod/Utils;->KEY_AOD_DISPLAY_MODE:Ljava/lang/String;
+    const-string v4, "aod_display_mode"
 
-    invoke-static {v4, v5, v3, p1}, Landroid/provider/Settings$Secure;->getIntForUser(Landroid/content/ContentResolver;Ljava/lang/String;II)I
+    invoke-static {v1, v4, v3, p1}, Landroid/provider/Settings$Secure;->getIntForUser(Landroid/content/ContentResolver;Ljava/lang/String;II)I
 
-    move-result v4
+    move-result v1
 
-    if-ne v4, v2, :cond_0
+    if-ne v1, v2, :cond_0
+
+    goto :goto_0
+
+    :cond_0
+    move v2, v3
 
     :goto_0
     sput-boolean v2, Lcom/oneplus/aod/Utils;->mIsAlwaysOnModeEnabled:Z
 
-    .line 104
-    sget-boolean v2, Lcom/oneplus/aod/Utils;->mIsAlwaysOnModeEnabled:Z
+    .line 86
+    sget-boolean v1, Lcom/oneplus/aod/Utils;->mIsAlwaysOnModeEnabled:Z
 
-    if-eqz v2, :cond_1
+    if-eqz v1, :cond_1
 
-    const-string/jumbo v1, "0"
+    const-string v1, "0"
 
-    .line 106
+    goto :goto_1
+
+    :cond_1
+    const-string v1, "1"
+
+    .line 88
     .local v1, "properties":Ljava/lang/String;
     :goto_1
     :try_start_0
-    const-string/jumbo v2, "sys.aod.disable"
+    const-string v2, "sys.aod.disable"
 
     invoke-static {v2, v1}, Landroid/os/SystemProperties;->set(Ljava/lang/String;Ljava/lang/String;)V
     :try_end_0
     .catch Ljava/lang/Exception; {:try_start_0 .. :try_end_0} :catch_0
 
-    .line 111
-    :goto_2
-    sget-object v2, Lcom/oneplus/aod/Utils;->TAG:Ljava/lang/String;
+    .line 91
+    goto :goto_2
 
-    new-instance v3, Ljava/lang/StringBuilder;
-
-    invoke-direct {v3}, Ljava/lang/StringBuilder;-><init>()V
-
-    const-string/jumbo v4, "updateAlwaysOnState: "
-
-    invoke-virtual {v3, v4}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
-
-    move-result-object v3
-
-    sget-boolean v4, Lcom/oneplus/aod/Utils;->mIsAlwaysOnModeEnabled:Z
-
-    invoke-virtual {v3, v4}, Ljava/lang/StringBuilder;->append(Z)Ljava/lang/StringBuilder;
-
-    move-result-object v3
-
-    const-string/jumbo v4, ", user = "
-
-    invoke-virtual {v3, v4}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
-
-    move-result-object v3
-
-    invoke-virtual {v3, p1}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
-
-    move-result-object v3
-
-    invoke-virtual {v3}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
-
-    move-result-object v3
-
-    invoke-static {v2, v3}, Landroid/util/Log;->d(Ljava/lang/String;Ljava/lang/String;)I
-
-    .line 112
-    return-void
-
-    .end local v1    # "properties":Ljava/lang/String;
-    :cond_0
-    move v2, v3
-
-    .line 102
-    goto :goto_0
-
-    .line 104
-    :cond_1
-    const-string/jumbo v1, "1"
-
-    .restart local v1    # "properties":Ljava/lang/String;
-    goto :goto_1
-
-    .line 107
+    .line 89
     :catch_0
-    move-exception v0
+    move-exception v2
 
-    .line 108
-    .local v0, "e":Ljava/lang/Exception;
-    sget-object v2, Lcom/oneplus/aod/Utils;->TAG:Ljava/lang/String;
-
+    .line 90
+    .local v2, "e":Ljava/lang/Exception;
     new-instance v3, Ljava/lang/StringBuilder;
 
     invoke-direct {v3}, Ljava/lang/StringBuilder;-><init>()V
 
-    const-string/jumbo v4, "Exception e = "
+    const-string v4, "Exception e = "
 
     invoke-virtual {v3, v4}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
 
-    move-result-object v3
-
-    invoke-virtual {v0}, Ljava/lang/Exception;->toString()Ljava/lang/String;
+    invoke-virtual {v2}, Ljava/lang/Exception;->toString()Ljava/lang/String;
 
     move-result-object v4
 
     invoke-virtual {v3, v4}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
 
-    move-result-object v3
-
     invoke-virtual {v3}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
 
     move-result-object v3
 
-    invoke-static {v2, v3}, Landroid/util/Log;->d(Ljava/lang/String;Ljava/lang/String;)I
+    invoke-static {v0, v3}, Landroid/util/Log;->d(Ljava/lang/String;Ljava/lang/String;)I
 
-    goto :goto_2
+    .line 93
+    .end local v2    # "e":Ljava/lang/Exception;
+    :goto_2
+    new-instance v2, Ljava/lang/StringBuilder;
+
+    invoke-direct {v2}, Ljava/lang/StringBuilder;-><init>()V
+
+    const-string v3, "updateAlwaysOnState: "
+
+    invoke-virtual {v2, v3}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    sget-boolean v3, Lcom/oneplus/aod/Utils;->mIsAlwaysOnModeEnabled:Z
+
+    invoke-virtual {v2, v3}, Ljava/lang/StringBuilder;->append(Z)Ljava/lang/StringBuilder;
+
+    const-string v3, ", user = "
+
+    invoke-virtual {v2, v3}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    invoke-virtual {v2, p1}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+
+    invoke-virtual {v2}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+
+    move-result-object v2
+
+    invoke-static {v0, v2}, Landroid/util/Log;->d(Ljava/lang/String;Ljava/lang/String;)I
+
+    .line 94
+    return-void
 .end method
 
 .method public static updateDozeSettings(Landroid/content/Context;I)V
@@ -353,158 +492,198 @@
     .param p0, "context"    # Landroid/content/Context;
     .param p1, "userId"    # I
 
-    .prologue
-    .line 124
+    .line 106
     invoke-static {p0, p1}, Lcom/oneplus/aod/Utils;->updateMotionAwakeState(Landroid/content/Context;I)V
 
-    .line 125
+    .line 108
+    invoke-static {p0, p1}, Lcom/oneplus/aod/Utils;->updateSingleTapAwakeState(Landroid/content/Context;I)V
+
+    .line 110
     invoke-static {p0, p1}, Lcom/oneplus/aod/Utils;->updateNotificationWakeState(Landroid/content/Context;I)V
 
-    .line 126
+    .line 111
     return-void
 .end method
 
 .method public static updateMotionAwakeState(Landroid/content/Context;I)V
-    .locals 4
+    .locals 3
     .param p0, "context"    # Landroid/content/Context;
     .param p1, "userId"    # I
 
-    .prologue
-    const/4 v0, 0x1
+    .line 48
+    invoke-virtual {p0}, Landroid/content/Context;->getContentResolver()Landroid/content/ContentResolver;
+
+    move-result-object v0
 
     const/4 v1, 0x0
 
-    .line 91
-    invoke-virtual {p0}, Landroid/content/Context;->getContentResolver()Landroid/content/ContentResolver;
+    const-string v2, "prox_wake_enabled"
 
-    move-result-object v2
+    invoke-static {v0, v2, v1, p1}, Landroid/provider/Settings$System;->getIntForUser(Landroid/content/ContentResolver;Ljava/lang/String;II)I
 
-    sget-object v3, Lcom/oneplus/aod/Utils;->KEY_MOTION_AWAKE:Ljava/lang/String;
+    move-result v0
 
-    invoke-static {v2, v3, v1, p1}, Landroid/provider/Settings$System;->getIntForUser(Landroid/content/ContentResolver;Ljava/lang/String;II)I
-
-    move-result v2
-
-    if-ne v2, v0, :cond_0
-
-    :goto_0
-    sput-boolean v0, Lcom/oneplus/aod/Utils;->mMotionAwakeOn:Z
-
-    .line 92
-    invoke-static {p0, p1}, Lcom/oneplus/aod/Utils;->updateAlwaysOnState(Landroid/content/Context;I)V
-
-    .line 93
-    sget-object v0, Lcom/oneplus/aod/Utils;->TAG:Ljava/lang/String;
-
-    new-instance v1, Ljava/lang/StringBuilder;
-
-    invoke-direct {v1}, Ljava/lang/StringBuilder;-><init>()V
-
-    const-string/jumbo v2, "updateMotionAwakeState: "
-
-    invoke-virtual {v1, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
-
-    move-result-object v1
-
-    sget-boolean v2, Lcom/oneplus/aod/Utils;->mMotionAwakeOn:Z
-
-    invoke-virtual {v1, v2}, Ljava/lang/StringBuilder;->append(Z)Ljava/lang/StringBuilder;
-
-    move-result-object v1
-
-    const-string/jumbo v2, ", user = "
-
-    invoke-virtual {v1, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
-
-    move-result-object v1
-
-    invoke-virtual {v1, p1}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
-
-    move-result-object v1
-
-    invoke-virtual {v1}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
-
-    move-result-object v1
-
-    invoke-static {v0, v1}, Landroid/util/Log;->d(Ljava/lang/String;Ljava/lang/String;)I
-
-    .line 94
-    return-void
-
-    :cond_0
-    move v0, v1
-
-    .line 91
-    goto :goto_0
-.end method
-
-.method public static updateNotificationWakeState(Landroid/content/Context;I)V
-    .locals 4
-    .param p0, "context"    # Landroid/content/Context;
-    .param p1, "userId"    # I
-
-    .prologue
-    const/4 v0, 0x1
-
-    const/4 v1, 0x0
-
-    .line 119
-    invoke-virtual {p0}, Landroid/content/Context;->getContentResolver()Landroid/content/ContentResolver;
-
-    move-result-object v2
-
-    sget-object v3, Lcom/oneplus/aod/Utils;->KEY_NOTIFICATION_WAKE:Ljava/lang/String;
-
-    invoke-static {v2, v3, v1, p1}, Landroid/provider/Settings$Secure;->getIntForUser(Landroid/content/ContentResolver;Ljava/lang/String;II)I
-
-    move-result v2
+    const/4 v2, 0x1
 
     if-ne v0, v2, :cond_0
 
-    :goto_0
-    sput-boolean v0, Lcom/oneplus/aod/Utils;->mIsNotificationWakeUpEnabled:Z
+    move v1, v2
 
-    .line 120
-    sget-object v0, Lcom/oneplus/aod/Utils;->TAG:Ljava/lang/String;
+    :cond_0
+    sput-boolean v1, Lcom/oneplus/aod/Utils;->mMotionAwakeOn:Z
 
+    .line 49
+    invoke-static {p0, p1}, Lcom/oneplus/aod/Utils;->updateAlwaysOnState(Landroid/content/Context;I)V
+
+    .line 50
+    new-instance v0, Ljava/lang/StringBuilder;
+
+    invoke-direct {v0}, Ljava/lang/StringBuilder;-><init>()V
+
+    const-string v1, "updateMotionAwakeState: "
+
+    invoke-virtual {v0, v1}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    sget-boolean v1, Lcom/oneplus/aod/Utils;->mMotionAwakeOn:Z
+
+    invoke-virtual {v0, v1}, Ljava/lang/StringBuilder;->append(Z)Ljava/lang/StringBuilder;
+
+    const-string v1, ", user = "
+
+    invoke-virtual {v0, v1}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    invoke-virtual {v0, p1}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+
+    invoke-virtual {v0}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+
+    move-result-object v0
+
+    const-string v1, "OPAodUtils"
+
+    invoke-static {v1, v0}, Landroid/util/Log;->d(Ljava/lang/String;Ljava/lang/String;)I
+
+    .line 51
+    return-void
+.end method
+
+.method public static updateNotificationWakeState(Landroid/content/Context;I)V
+    .locals 3
+    .param p0, "context"    # Landroid/content/Context;
+    .param p1, "userId"    # I
+
+    .line 101
+    invoke-virtual {p0}, Landroid/content/Context;->getContentResolver()Landroid/content/ContentResolver;
+
+    move-result-object v0
+
+    const/4 v1, 0x0
+
+    const-string v2, "notification_wake_enabled"
+
+    invoke-static {v0, v2, v1, p1}, Landroid/provider/Settings$Secure;->getIntForUser(Landroid/content/ContentResolver;Ljava/lang/String;II)I
+
+    move-result v0
+
+    const/4 v2, 0x1
+
+    if-ne v2, v0, :cond_0
+
+    move v1, v2
+
+    :cond_0
+    sput-boolean v1, Lcom/oneplus/aod/Utils;->mIsNotificationWakeUpEnabled:Z
+
+    .line 102
+    new-instance v0, Ljava/lang/StringBuilder;
+
+    invoke-direct {v0}, Ljava/lang/StringBuilder;-><init>()V
+
+    const-string v1, "updateNotificationWakeState: "
+
+    invoke-virtual {v0, v1}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    sget-boolean v1, Lcom/oneplus/aod/Utils;->mIsNotificationWakeUpEnabled:Z
+
+    invoke-virtual {v0, v1}, Ljava/lang/StringBuilder;->append(Z)Ljava/lang/StringBuilder;
+
+    const-string v1, ", user = "
+
+    invoke-virtual {v0, v1}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    invoke-virtual {v0, p1}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+
+    invoke-virtual {v0}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+
+    move-result-object v0
+
+    const-string v1, "OPAodUtils"
+
+    invoke-static {v1, v0}, Landroid/util/Log;->d(Ljava/lang/String;Ljava/lang/String;)I
+
+    .line 103
+    return-void
+.end method
+
+.method public static updateSingleTapAwakeState(Landroid/content/Context;I)V
+    .locals 4
+    .param p0, "context"    # Landroid/content/Context;
+    .param p1, "userId"    # I
+
+    .line 55
+    invoke-virtual {p0}, Landroid/content/Context;->getContentResolver()Landroid/content/ContentResolver;
+
+    move-result-object v0
+
+    const/4 v1, 0x0
+
+    const-string v2, "oem_acc_blackscreen_gestrue_enable"
+
+    invoke-static {v0, v2, v1, p1}, Landroid/provider/Settings$System;->getIntForUser(Landroid/content/ContentResolver;Ljava/lang/String;II)I
+
+    move-result v0
+
+    .line 58
+    .local v0, "gestureValue":I
+    and-int/lit16 v2, v0, 0x800
+
+    shr-int/lit8 v2, v2, 0xb
+
+    const/4 v3, 0x1
+
+    if-ne v2, v3, :cond_0
+
+    move v1, v3
+
+    :cond_0
+    sput-boolean v1, Lcom/oneplus/aod/Utils;->mSingleTapAwakeOn:Z
+
+    .line 59
     new-instance v1, Ljava/lang/StringBuilder;
 
     invoke-direct {v1}, Ljava/lang/StringBuilder;-><init>()V
 
-    const-string/jumbo v2, "updateNotificationWakeState: "
+    const-string v2, "updateSingleTapAwakeState: "
 
     invoke-virtual {v1, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
 
-    move-result-object v1
-
-    sget-boolean v2, Lcom/oneplus/aod/Utils;->mIsNotificationWakeUpEnabled:Z
+    sget-boolean v2, Lcom/oneplus/aod/Utils;->mSingleTapAwakeOn:Z
 
     invoke-virtual {v1, v2}, Ljava/lang/StringBuilder;->append(Z)Ljava/lang/StringBuilder;
 
-    move-result-object v1
-
-    const-string/jumbo v2, ", user = "
+    const-string v2, ", user = "
 
     invoke-virtual {v1, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
 
-    move-result-object v1
-
     invoke-virtual {v1, p1}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
-
-    move-result-object v1
 
     invoke-virtual {v1}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
 
     move-result-object v1
 
-    invoke-static {v0, v1}, Landroid/util/Log;->d(Ljava/lang/String;Ljava/lang/String;)I
+    const-string v2, "OPAodUtils"
 
-    .line 121
+    invoke-static {v2, v1}, Landroid/util/Log;->d(Ljava/lang/String;Ljava/lang/String;)I
+
+    .line 60
     return-void
-
-    :cond_0
-    move v0, v1
-
-    .line 119
-    goto :goto_0
 .end method
