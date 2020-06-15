@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<com.android.systemui.statusbar.phone.PhoneStatusBarView xmlns:android="http://schemas.android.com/apk/res/android"
+
+    xmlns:systemui="http://schemas.android.com/apk/res/com.android.systemui"
+
+    android:orientation="vertical"
+
+    android:id="@7f0b04a5"
+
+    android:background="@7f080c6f"
+
+    android:paddingTop="@7f0705bd"
+
+    android:focusable="false"
+
+    android:descendantFocusability="afterDescendants"
+
+    android:layout_width="match_parent"
+
+    android:layout_height="@7f07072e"
+
+    android:accessibilityPaneTitle="@7f120657">
+
+    <ImageView
+
+        android:id="@7f0b0349"
+
+        android:paddingBottom="2dp"
+
+        android:visibility="gone"
+
+        android:layout_width="@7f070735"
+
+        android:layout_height="match_parent"
+
+        android:src="@7f080795"
+
+        android:scaleType="center"
+
+        android:paddingStart="@7f07073b" />
+
+    <LinearLayout
+
+        android:orientation="horizontal"
+
+        android:id="@7f0b04a7"
+
+        android:paddingTop="@7f07073c"
+
+        android:layout_width="match_parent"
+
+        android:layout_height="match_parent"
+
+        android:paddingStart="@7f07073b"
+
+        android:paddingEnd="@7f07073a">
+
+        <com.android.systemui.statusbar.policy.Clock
+
+            android:textAppearance="@7f1303ce"
+
+            android:gravity="center|start"
+
+            android:layout_gravity="center_vertical"
+
+            android:id="@7f0b0129"
+
+            android:tag="status_clock"
+
+            android:layout_width="wrap_content"
+
+            android:layout_height="wrap_content"
+
+            android:singleLine="true"
+
+            android:includeFontPadding="false"
+
+            android:paddingEnd="@7f070736" />
+
+        <include
+
+            android:layout_width="wrap_content"
+
+            android:layout_height="match_parent"
+
+            layout="@7f0e0065" />
+
+        <FrameLayout
+
+            android:id="@7f0b04a8"
+
+            android:layout_width="0dp"
+
+            android:layout_height="match_parent"
+
+            android:layout_weight="1.0">
+
+            <include layout="@7f0e0063" />
+
+            <LinearLayout
+
+                android:id="@7f0b04aa"
+
+                android:clipChildren="false"
+
+                android:layout_width="match_parent"
+
+                android:layout_height="match_parent">
+
+                <com.android.systemui.statusbar.policy.Clock
+
+                    android:textAppearance="@7f1303ce"
+
+                    android:gravity="center|start"
+
+                    android:layout_gravity="center_vertical"
+
+                    android:id="@7f0b0129"
+
+                    android:tag="status_left_clock"
+
+                    android:layout_width="wrap_content"
+
+                    android:layout_height="wrap_content"
+
+                    android:singleLine="true"
+
+                    android:includeFontPadding="false"
+
+                    android:paddingEnd="@7f070736" />
+
+                <include
+
+                    android:layout_width="wrap_content"
+
+                    android:layout_height="match_parent"
+
+                    layout="@7f0e0065" />
+
+                <ViewStub
+
+                    android:id="@7f0b0393"
+
+                    android:layout="@7f0e017b"
+
+                    android:layout_width="wrap_content"
+
+                    android:layout_height="match_parent" />
+
+                <com.android.systemui.statusbar.AlphaOptimizedFrameLayout
+
+                    android:orientation="horizontal"
+
+                    android:id="@7f0b0347"
+
+                    android:clipChildren="false"
+
+                    android:layout_width="0dp"
+
+                    android:layout_height="match_parent"
+
+                    android:layout_weight="1.0" />
+
+            </LinearLayout>
+
+        </FrameLayout>
+
+        <android.widget.Space
+
+            android:gravity="center"
+
+            android:id="@7f0b014c"
+
+            android:layout_width="0dp"
+
+            android:layout_height="match_parent" />
+
+        <com.android.systemui.statusbar.AlphaOptimizedFrameLayout
+
+            android:gravity="center"
+
+            android:orientation="horizontal"
+
+            android:id="@7f0b0116"
+
+            android:clipChildren="false"
+
+            android:layout_width="wrap_content"
+
+            android:layout_height="match_parent" />
+
+        <com.android.keyguard.AlphaOptimizedLinearLayout
+
+            android:gravity="center|end"
+
+            android:orientation="horizontal"
+
+            android:id="@7f0b04bc"
+
+            android:layout_width="0dp"
+
+            android:layout_height="match_parent"
+
+            android:layout_weight="1.0">
+
+            <include layout="@7f0e01f4" />
+
+        </com.android.keyguard.AlphaOptimizedLinearLayout>
+
+    </LinearLayout>
+
+    <ViewStub
+
+        android:id="@7f0b0193"
+
+        android:layout="@7f0e0055"
+
+        android:layout_width="wrap_content"
+
+        android:layout_height="match_parent" />
+
+    <include
+
+        android:layout_width="match_parent"
+
+        android:layout_height="match_parent"
+
+        layout="@7f0e0045" />
+
+    <View
+
+        android:id="@7f0b0507"
+
+        android:layout_width="wrap_content"
+
+        android:layout_height="match_parent" />
+
+</com.android.systemui.statusbar.phone.PhoneStatusBarView>
+
